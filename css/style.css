@@ -359,6 +359,7 @@ section[id], footer[id] { scroll-margin-top: 108px; }
 .section__head--center p { max-width: 70ch; }
 
 /* ---------- 7. Steps ---------- */
+#steps { background: #FCFFFD; }
 .steps { display: flex; flex-direction: column; gap: var(--space-5); }
 .step {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
