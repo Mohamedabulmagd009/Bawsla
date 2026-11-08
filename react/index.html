@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>بوصلة | Bawsala — اكتشف مسارك وابنِ مستقبلك المهني</title>
+  <meta name="description" content="منصة سعودية تساعدك على فهم قدراتك، اكتشاف المسار المهني الأنسب، التدرّب عليه مع خبراء، والوصول إلى فرص عمل تتوافق مع خبراتك.">
+  <meta name="theme-color" content="#004723">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <!-- Swaps an image for its SVG placeholder if the real file is missing. -->
+  <script>
+    document.addEventListener('error', function (e) {
+      var t = e.target;
+      if (t && t.tagName === 'IMG' && t.getAttribute('data-fallback') && !t.getAttribute('data-fb-done')) {
+        t.setAttribute('data-fb-done', '1');
+        t.src = t.getAttribute('data-fallback');
+      }
+    }, true);
+  </script>
+</head>
+<body id="top">
+
+  <!-- Icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-tick" viewBox="0 0 24 24"><path d="M4.5 12.8l5 5L19.5 7"/></symbol>
+      <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18a2 2 0 0 1 2 2v1.5M4 7.5V17a2 2 0 0 0 2 2h12.5a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 18.5 8H6.5A2.5 2.5 0 0 1 4 5.5"/><circle cx="16.2" cy="13.5" r="1.1"/></symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7.5l8.5 6 8.5-6"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.2 2"/></symbol>
+      <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20c.6-3.8 3.8-6 7.5-6s6.9 2.2 7.5 6"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+      <symbol id="logo-mark" viewBox="0 0 48 48">
+        <rect width="48" height="48" rx="12" fill="#007f3f"/>
+        <circle cx="24" cy="24" r="16" fill="none" stroke="#fcfffd" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="0.1 4"/>
+        <path d="M24 11l5 13H19z" fill="#fcfffd"/>
+        <path d="M24 37l-5-13h10z" fill="#b8ccbf"/>
+        <circle cx="24" cy="24" r="1.8" fill="#007f3f"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div id="root"></div>
+
+  <!-- React 18 + Babel (compiled in the browser; no build step needed) -->
+  <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js" crossorigin></script>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useRef, useCallback } = React;
+
+    /* ------------------------------------------------------------------
+       Helpers
+       ------------------------------------------------------------------ */
+    const AR_DIGITS = '٠١٢٣٤٥٦٧٨٩';
+    const toAr = (n) => String(n).replace(/\d/g, (d) => AR_DIGITS.charAt(Number(d)));
+    const cx = (...parts) => parts.filter(Boolean).join(' ');
+
+    const Icon = ({ id, className = '' }) => (
+      <svg className={cx('icon', className)} aria-hidden="true"><use href={`#${id}`} /></svg>
+    );
+
+    /* Adds "is-in" once the element scrolls into view (drives the CSS reveal animations). */
+    function Reveal({ as: Tag = 'div', className = '', plain = false, delay, style, children, ...rest }) {
+      const ref = useRef(null);
+      const [seen, setSeen] = useState(false);
+      useEffect(() => {
+        const el = ref.current;
+        if (!el) return undefined;
+        if (!('IntersectionObserver' in window)) { setSeen(true); return undefined; }
+        const io = new IntersectionObserver((entries) => {
+          if (entries.some((e) => e.isIntersecting)) { setSeen(true); io.disconnect(); }
+        }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+        io.observe(el);
+        return () => io.disconnect();
+      }, []);
+      const merged = delay ? { ...style, '--delay': delay } : style;
+      return <Tag ref={ref} className={cx(!plain && 'reveal', className, seen && 'is-in')} style={merged} {...rest}>{children}</Tag>;
+    }
+
+    /* ------------------------------------------------------------------
+       Data
+       ------------------------------------------------------------------ */
+    const NAV = [
+      { id: 'top', label: 'الرئيسية' },
+      { id: 'steps', label: 'كيف تعمل' },
+      { id: 'courses', label: 'التدريب' },
+      { id: 'contact', label: 'تواصل معنا' },
+    ];
+
+    const TRUST = ['شركة أثر الرقمية', 'شركة حلول المستقبل', 'شركة نسق للبرمجيات', 'شركة بيان للتسويق'];
+
+    const STEPS = [
+      { n: '١', title: 'اكتشف', desc: 'تحدّث مع مرشد بوصلة الذكي أو أنشئ ملفك المهني لتتعرف على ميولك ومهاراتك الحالية.', gain: 'معرفة واضحة بنقطة البداية دون تخمين.', cta: 'جرّب المرشد الآن', href: '#advisor', img: '1', ext: 'png', w: 2576, h: 1750, kind: 'land', alt: 'رجل سعودي يعمل على حاسوب تظهر على شاشته أكواد برمجية' },
+      { n: '٢', title: 'قيّم', desc: 'أجرِ التقييم المهني الشامل (١٠ دقائق) لقياس أسلوب تفكيرك وتفضيلاتك وقدراتك.', gain: 'تقرير بنقاط القوة ومجالات التطوير.', cta: 'جرّب تقييمًا سريعًا', href: '#exam', img: '2', ext: 'png', w: 2576, h: 3816, kind: 'tall', alt: 'شاب يعمل على حاسوب محمول أثناء التقييم المهني' },
+      { n: '٣', title: 'خطّط', desc: 'احصل على مسارات مقترحة بنسب توافق وخارطة طريق من المبتدئ إلى القيادي.', gain: 'وضوح في الخطوات التالية لتحقيق هدفك.', cta: 'أنشئ حسابك', href: '#pricing', img: '3', ext: 'png', w: 2576, h: 1750, kind: 'land', alt: 'رجل يراجع أوراق خطته المهنية على مكتبه' },
+      { n: '٤', title: 'تدرّب', desc: 'التحق ببرنامج تدريبي بجلسات مباشرة ومشاريع عملية وشهادة إتمام تدعم ملفك.', gain: 'مهارات موثّقة ومعرض أعمال جاهز.', cta: 'استعرض البرامج', href: '#courses', img: '4', ext: 'png', w: 2576, h: 3816, kind: 'tall', alt: 'متدرب يتابع تقريرًا على شاشة أثناء التدريب' },
+      { n: '٥', title: 'تقدّم', desc: 'تقدّم على وظائف تناسب ملفك بنسبة توافق، وادفع بالكريديت فقط عند التقديم.', gain: 'طلبات جادّة تصل إلى أصحاب العمل المناسبين.', cta: 'اطّلع على الأسعار', href: '#pricing', img: '5', ext: 'png', w: 2576, h: 3797, kind: 'tall', alt: 'شخص يتقدم لوظيفة من حاسوب مكتبي' },
+      { n: '٦', title: 'تطوّر', desc: 'تابع طلباتك وتقدمك التدريبي، وحدّث مسارك مع نمو خبراتك وطموحاتك.', gain: 'نمو مهني مستمر وفرص ترقٍّ أفضل.', cta: 'ابدأ الآن', href: '#pricing', img: '6', ext: 'png', w: 2576, h: 1750, kind: 'land', alt: 'مطوّر يكتب كودًا على حاسوبه ضمن مسار التطوّر المهني' },
+    ];
+
+    const EXAM_POINTS = ['ملفك المهني وأسلوب عملك', 'نقاط القوة ومجالات التطوير', 'تحليل لمهاراتك الأساسية', 'مسارات مقترحة بنسب توافق'];
+    const ADVISOR_POINTS = ['ست أسئلة تأخذ دقيقتين', 'يفهم إجاباتك الحرة بالعربية', 'مسار مقترح بنسبة توافق وراتب متوقع', 'خطة واضحة: تقييم ثم تدريب ثم تقديم'];
+
+    const FEATURE = {
+      title: 'برنامج تصميم تجربة المستخدم الاحترافي',
+      coach: 'م. لينا العمري، مديرة تصميم المنتجات',
+      facts: [['تبدأ', '٢٠٢٦/١١/٢٢'], ['المدة', '١٢ أسبوعًا'], ['الجلسات', 'الأحد والثلاثاء، ٧:٠٠ م'], ['الجهد المتوقع', '٦–٨ ساعات أسبوعيًا']],
+      price: '٢,٤٠٠ ر.س',
+      perks: ['جلسات مباشرة أسبوعية مع المدرب', 'ملاحظات فردية على أعمالك', 'ثلاثة مشاريع عملية لمعرض أعمالك', 'شهادة إتمام تظهر في ملفك المهني', 'تجهيز السيرة الذاتية والمقابلات', '٢٠ كريديت هدية عند التسجيل'],
+    };
+
+    const PROGRAMS = [
+      { name: 'برنامج تحليل البيانات من الصفر إلى الاحتراف', coach: 'د. ماجد الشهراني', start: '٢٠٢٦/١١/٠٨', length: '١٠ أسابيع', fee: '٢,٢٠٠ ر.س' },
+      { name: 'برنامج تطوير الواجهات الأمامية', coach: 'م. أحمد الزهراني', start: '٢٠٢٦/١١/١٥', length: '١٤ أسبوعًا', fee: '٢,٨٠٠ ر.س' },
+      { name: 'برنامج إدارة المنتجات الرقمية', coach: 'م. سلطان العتيبي', start: '٢٠٢٦/١٢/٠٦', length: '١٠ أسابيع', fee: '٢,٦٠٠ ر.س' },
+    ];
+
+    const PARTNERS = [
+      { name: 'شركة أثر الرقمية', img: 'Athr', w: 400, h: 132 },
+      { name: 'شركة حلول المستقبل', img: 'Holol', w: 400, h: 112 },
+      { name: 'شركة نسق للبرمجيات', img: 'Nusuk', w: 400, h: 172 },
+      { name: 'شركة بيان للتسويق', img: 'Bayan', w: 400, h: 96 },
+      { name: 'شركة رؤية المستقبل', img: 'Roaya', w: 400, h: 188 },
+      { name: 'شركة ريادة للابتكار', img: 'Rayada', w: 400, h: 208 },
+    ];
+
+    const HOW = [
+      { n: '١', title: 'اشترِ حزمة كريديت', text: 'ابدأ بـ ٢٠ كريديت هدية ثم اختر ما يناسبك.' },
+      { n: '٢', title: 'تقدّم على الوظائف', text: 'يُخصم من ٢ إلى ٨ كريديت بحسب مستوى الوظيفة.' },
+      { n: '٣', title: 'استرد كريديتك تلقائيًا', text: 'استرداد تلقائي بعد ٧ أيام دون اطلاع.' },
+    ];
+
+    const PLANS = [
+      { name: 'ابدأ مجانًا', price: '٠', credits: '٢٠ كريديت هدية', cta: 'أنشئ حسابك مجانًا', list: ['المرشد الذكي والتقييم المبدئي', 'ملف مهني ومسار مقترح', 'من ٣ إلى ٥ طلبات تقديم تجريبية'] },
+      { name: 'الأساسية', price: '٤٩', credits: '٥٠ كريديت', cta: 'اختر الحزمة', list: ['تكفي لحوالي ١٠ طلبات', 'صالحة ١٢ شهرًا', 'استرداد تلقائي عند عدم الاطلاع'] },
+      { name: 'الاحترافية', price: '١٢٩', credits: '١٦٠ كريديت', cta: 'اختر الحزمة', featured: true, badge: 'الأكثر مبيعًا', list: ['تشمل ١٠ كريديت هدية', 'صالحة ١٢ شهرًا', 'استرداد تلقائي عند عدم الاطلاع'] },
+      { name: 'المتقدمة', price: '٢٩٩', credits: '٣٠٠ كريديت', cta: 'اختر الحزمة', list: ['الأوفر لكل كريديت', 'صالحة ١٢ شهرًا', 'استرداد تلقائي عند عدم الاطلاع'] },
+    ];
+
+    const QUESTIONS = [
+      { q: 'عندما تواجه مشكلة جديدة في العمل، ماذا تفعل أولًا؟', o: [['أقسّم المهمة وأضع خطة تنفيذ', 'pm'], ['أبني نموذجًا سريعًا بالكود', 'dev'], ['أجمع البيانات وأبحث عن الأنماط', 'data']] },
+      { q: 'أي نشاط تفضّله في وقت فراغك؟', o: [['ترتيب أفكار وتنظيم مشروع', 'pm'], ['تجربة أدوات وأكواد جديدة', 'dev'], ['قراءة أرقام وتقارير', 'data']] },
+      { q: 'ما الذي يرضيك في نهاية يوم العمل؟', o: [['فريق أنجز هدفه في موعده', 'pm'], ['ميزة تعمل أمام عينيّ', 'dev'], ['فهمت سبب نتيجة غريبة', 'data']] },
+    ];
+    const TOTAL_SECONDS = 30;
+
+    /* ------------------------------------------------------------------
+       Header
+       ------------------------------------------------------------------ */
+    function Header({ onToast }) {
+      const [open, setOpen] = useState(false);
+      const [scrolled, setScrolled] = useState(false);
+      const [active, setActive] = useState('top');
+
+      useEffect(() => {
+        let ticking = false;
+        const update = () => {
+          ticking = false;
+          setScrolled((window.pageYOffset || document.documentElement.scrollTop) > 8);
+          let current = 'top';
+          ['steps', 'courses', 'contact'].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el && el.getBoundingClientRect().top <= 160) current = id;
+          });
+          setActive(current);
+        };
+        const onScroll = () => { if (!ticking) { ticking = true; window.requestAnimationFrame(update); } };
+        const onResize = () => { if (window.innerWidth >= 1000) setOpen(false); onScroll(); };
+        const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+        update();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onResize);
+        document.addEventListener('keydown', onKey);
+        return () => {
+          window.removeEventListener('scroll', onScroll);
+          window.removeEventListener('resize', onResize);
+          document.removeEventListener('keydown', onKey);
+        };
+      }, []);
+
+      return (
+        <header className={cx('site-header', scrolled && 'is-scrolled')} id="siteHeader">
+          <div className="container">
+            <nav className="nav" aria-label="التنقل الرئيسي">
+              <a className="brand" href="#top" aria-label="بوصلة — الصفحة الرئيسية">
+                <svg className="brand__mark" viewBox="0 0 48 48" aria-hidden="true"><use href="#logo-mark" /></svg>
+                <span className="brand__name">بوصلة | Bawsala</span>
+              </a>
+
+              <button className="nav__toggle" type="button" aria-expanded={open ? 'true' : 'false'} aria-controls="navMenu"
+                aria-label={open ? 'إغلاق القائمة' : 'فتح القائمة'} onClick={() => setOpen((v) => !v)}>
+                <Icon id="i-menu" className="i-menu" />
+                <Icon id="i-close" className="i-close" />
+              </button>
+
+              <div className={cx('nav__menu', open && 'is-open')} id="navMenu">
+                <ul className="nav__links">
+                  {NAV.map((l) => (
+                    <li key={l.id}>
+                      <a className={cx('nav__link', active === l.id && 'is-active')} href={`#${l.id}`}
+                        aria-current={active === l.id ? 'true' : undefined} onClick={() => setOpen(false)}>{l.label}</a>
+                    </li>
+                  ))}
+                </ul>
+                <div className="nav__login-wrap">
+                  <a className="btn btn--primary btn--sm" href="#"
+                    onClick={(e) => { e.preventDefault(); setOpen(false); onToast('تسجيل الدخول غير مربوط بخادم في هذا النموذج.'); }}>تسجيل الدخول</a>
+                </div>
+              </div>
+            </nav>
+          </div>
+        </header>
+      );
+    }
+
+    /* ------------------------------------------------------------------
+       Hero
+       ------------------------------------------------------------------ */
+    function Hero() {
+      return (
+        <section className="hero" aria-labelledby="hero-title">
+          <div className="container">
+            <div className="hero__grid">
+              <div className="hero__copy">
+                <h1 className="hero__title" id="hero-title">
+                  <span className="t-display">طوّر مهاراتك</span>
+                  <span className="t-h1">اكتشف مسارك وابنِ مستقبلك المهني.</span>
+                </h1>
+                <p className="hero__lead">منصة متكاملة تساعدك على فهم قدراتك، اكتشاف المسار المهني الأنسب لك، التدرّب عليه مع خبراء، والوصول إلى فرص عمل تتوافق مع خبراتك وطموحاتك.</p>
+                <div className="hero__actions">
+                  <a className="btn btn--primary btn--lg" href="#exam">ابدأ رحلتك الآن</a>
+                  <a className="btn btn--secondary btn--lg" href="#advisor">تحدث مع مساعدك</a>
+                </div>
+                <p className="hero__note">
+                  <Icon id="i-wallet" />
+                  <span>تحصل على ٢٠ كريديت هدية عند التسجيل، ولا نطلب بطاقة دفع للبدء.</span>
+                </p>
+              </div>
+              <div className="hero__art">
+                <img src="../images/hero%20section.png" width="2354" height="1944"
+                  alt="متدرب يعمل على حاسوب أمامه" />
+              </div>
+            </div>
+
+            <div className="trust" aria-label="شركاء النجاح">
+              <ul className="trust__list">
+                {TRUST.map((t) => <li className="trust__item" key={t}>{t}</li>)}
+              </ul>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ------------------------------------------------------------------
+       Steps
+       ------------------------------------------------------------------ */
+    function Step({ s, flip }) {
+      return (
+        <Reveal as="li" plain className={cx('step', flip && 'step--flip')}>
+          <Reveal className="step__body">
+            <div className="step__num" aria-hidden="true">{s.n}</div>
+            <div className="step__text">
+              <h3 className="step__title">{s.title}</h3>
+              <p className="step__desc">{s.desc}</p>
+            </div>
+            <p className="step__gain"><Icon id="i-tick" /><span>{s.gain}</span></p>
+            <a className="btn btn--ghost btn--lg" href={s.href}>{s.cta}</a>
+          </Reveal>
+          <figure className={cx('step__media', `step__media--${s.kind}`)}>
+            <img src={`../images/${s.img}.${s.ext}`} width={s.w} height={s.h} loading="lazy" alt={s.alt} />
+          </figure>
+        </Reveal>
+      );
+    }
+
+    function Steps() {
+      return (
+        <section className="section" id="steps" aria-labelledby="steps-title">
+          <div className="container">
+            <Reveal className="section__head section__head--center">
+              <h2 className="t-h1" id="steps-title">ست محطات من الحيرة إلى الوظيفة</h2>
+              <p>لا تبدأ بالتقديم العشوائي. اتبع مسارًا واضحًا، وكل محطة تجهّز التي بعدها.</p>
+            </Reveal>
+            <ol className="steps">
+              {STEPS.map((s, i) => <Step key={s.img} s={s} flip={i % 2 === 1} />)}
+            </ol>
+          </div>
+        </section>
+      );
+    }
+
+    /* ------------------------------------------------------------------
+       Exam / quick assessment
+       ------------------------------------------------------------------ */
+    const freshQuiz = () => ({ i: 0, picks: [], left: TOTAL_SECONDS, started: false, locked: false, done: false });
+
+    function Quiz() {
+      const [st, setSt] = useState(freshQuiz);
+
+      // countdown starts after the first answer
+      useEffect(() => {
+        if (!st.started || st.done) return undefined;
+        const id = setInterval(() => {
+          setSt((s) => {
+            if (s.done) return s;
+            const left = s.left - 1;
+            return left <= 0 ? { ...s, left: 0, done: true } : { ...s, left };
+          });
+        }, 1000);
+        return () => clearInterval(id);
+      }, [st.started, st.done]);
+
+      // move on after an answer was picked
+      useEffect(() => {
+        if (!st.locked || st.done) return undefined;
+        const id = setTimeout(() => {
+          setSt((s) => (s.i < QUESTIONS.length - 1 ? { ...s, i: s.i + 1, locked: false } : { ...s, locked: false, done: true }));
+        }, 650);
+        return () => clearTimeout(id);
+      }, [st.locked, st.done, st.i]);
+
+      const pick = (idx) => {
+        if (st.locked || st.done) return;
+        setSt((s) => ({ ...s, picks: [...s.picks, QUESTIONS[s.i].o[idx][1]], locked: true, started: true, chosen: idx }));
+      };
+      const reset = () => setSt(freshQuiz());
+
+      const progress = st.picks.length;
+      const q = QUESTIONS[st.done && st.picks.length ? Math.min(st.picks.length - 1, st.i) : st.i];
+      const lastPick = st.picks[st.picks.length - 1];
+
+      return (
+        <Reveal className="quiz" id="quiz" delay=".15s">
+          <div className="quiz__bar">
+            <span>{st.done ? 'النتيجة' : `السؤال ${toAr(st.i + 1)} من ${toAr(QUESTIONS.length)}`}</span>
+            <span className="quiz__meta">
+              <span>تقييم تجريبي</span>
+              <span className={cx('quiz__timer', !st.done && st.left <= 10 && 'is-low')}>
+                {st.done ? 'اكتمل التقييم' : `${toAr(st.left)} ثانية`}
+              </span>
+            </span>
+          </div>
+          <div className="quiz__progress" role="progressbar" aria-label="تقدّمك في التقييم" aria-valuemin="0" aria-valuemax="3" aria-valuenow={progress}>
+            <div className="quiz__fill" style={{ width: `${Math.round((progress / QUESTIONS.length) * 100)}%` }} />
+          </div>
+
+          <div className="quiz__stage" aria-live="polite">
+            {(!st.done || st.picks.length > 0) && (
+              <div className={cx('quiz__view', st.done && 'quiz__view--locked')} key={`q${st.i}`}>
+                <h3 className="quiz__q" id="quizQ">{q.q}</h3>
+                <div className={cx('quiz__options', (st.locked || st.done) && 'is-locked')} role="radiogroup" aria-labelledby="quizQ">
+                  {q.o.map((opt, idx) => (
+                    <button key={opt[0]} className="quiz__opt" type="button" role="radio"
+                      aria-checked={st.done ? lastPick === opt[1] : st.locked && st.chosen === idx ? 'true' : 'false'} disabled={st.done} onClick={() => pick(idx)}>
+                      <span className="quiz__radio"><Icon id="i-tick" /></span>
+                      <span className="quiz__label">{opt[0]}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {st.done && st.picks.length === 0 && (
+              <div className="result">
+                <div className="result__head">
+                  <h3 className="result__best">انتهى الوقت</h3>
+                  <p className="result__kicker">لم نستلم أي إجابة. جرّب مرة أخرى، فالأسئلة الثلاثة تأخذ أقل من دقيقة.</p>
+                </div>
+                <div className="result__actions">
+                  <button className="btn btn--primary btn--md" type="button" onClick={reset}>ابدأ من جديد</button>
+                </div>
+              </div>
+            )}
+
+            {st.done && st.picks.length > 0 && (
+              <div className="quiz__gate">
+                <div className="quiz__gate-card">
+                  <p className="quiz__gate-note">
+                    <svg className="icon" aria-hidden="true" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></svg>
+                    متاح بعد إنشاء حساب مجاني
+                  </p>
+                  <a className="btn btn--primary btn--md quiz__gate-cta" href="#pricing">أعرف نتيجتك الآن</a>
+                  <button className="btn btn--ghost quiz__gate-retry" type="button" onClick={reset}>إعادة التقييم</button>
+                </div>
+              </div>
+            )}
+          </div>
+        </Reveal>
+      );
+    }
+
+    function Exam() {
+      return (
+        <section className="section" id="exam" aria-labelledby="exam-title">
+          <div className="container">
+            <div className="exam__grid">
+              <Reveal className="exam__copy">
+                <h2 className="t-h2" id="exam-title">اكتشف ميولك في دقيقة، ثم أكمل التقييم الكامل</h2>
+                <p>١٠ دقائق تقيس أسلوب تفكيرك وتفضيلاتك المهنية وتربطها بمسارات حقيقية في سوق العمل السعودي. جرّب ثلاثة أسئلة الآن.</p>
+                <ul className="ticks">
+                  {EXAM_POINTS.map((t) => <li key={t}><Icon id="i-tick" />{t}</li>)}
+                </ul>
+                <a className="btn btn--secondary btn--md" href="#pricing">أعرف تقييمك الآن</a>
+              </Reveal>
+              <Quiz />
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ------------------------------------------------------------------
+       Advisor CTA
+       ------------------------------------------------------------------ */
+    function Advisor({ onToast }) {
+      return (
+        <section className="band advisor" id="advisor" aria-labelledby="advisor-title">
+          <div className="container advisor__inner">
+            <Reveal as="h2" className="t-display" id="advisor-title">لا تعرف من أين تبدأ؟ اسأل مرشد بوصلة</Reveal>
+            <Reveal as="p" className="advisor__lead">كثيرون لا يعرفون أي مجال يناسبهم. يسألك المرشد ست أسئلة قصيرة، أو اكتب له بحرية بالعربية، ثم يقترح عليك مسارًا وبرنامج تدريب يناسب وقتك.</Reveal>
+            <div className="advisor__foot">
+              <Reveal as="ul" className="ticks advisor__list">
+                {ADVISOR_POINTS.map((t) => <li key={t}><Icon id="i-tick" />{t}</li>)}
+              </Reveal>
+              <p className="advisor__note">التجربة مجانية ولا تحتاج إلى حساب.</p>
+            </div>
+            <a className="btn btn--primary btn--lg" href="#"
+              onClick={(e) => { e.preventDefault(); onToast('المرشد الذكي غير مربوط بخادم في هذا النموذج.'); }}>اسأل المرشد الآن</a>
+          </div>
+        </section>
+      );
+    }
+
+    /* ------------------------------------------------------------------
+       Courses
+       ------------------------------------------------------------------ */
+    function Program({ p, onToast }) {
+      const [done, setDone] = useState(false);
+      const toggle = () => {
+        const next = !done;
+        setDone(next);
+        onToast(next ? `سجّلنا اهتمامك بـ${p.name}. سنراسلك عند فتح التسجيل.` : 'ألغينا تسجيل اهتمامك.');
+      };
+      return (
+        <Reveal as="article" className="program">
+          <h3 className="program__name">{p.name}<small>{p.coach}</small></h3>
+          <div className="program__cell"><span>تبدأ</span><b>{p.start}</b></div>
+          <div className="program__cell"><span>المدة</span><b>{p.length}</b></div>
+          <div className="program__cell"><span>الرسوم</span><b>{p.fee}</b></div>
+          <button className={cx('btn btn--secondary btn--md', done && 'is-done')} type="button" onClick={toggle}>
+            {done ? 'تم تسجيل اهتمامك' : 'سجل اهتماماتك'}
+          </button>
+        </Reveal>
+      );
+    }
+
+    function Courses({ onToast }) {
+      return (
+        <section className="section" id="courses" aria-labelledby="courses-title">
+          <div className="container">
+            <Reveal className="section__head">
+              <h2 className="t-display" id="courses-title" style={{ color: 'var(--primary-600)' }}>برامج تدريب تنتهي بمشروع وشهادة وفرصة</h2>
+              <p>مدربون يعملون في السوق، وجلسات مباشرة أسبوعية، وثلاثة مشاريع تبني بها معرض أعمالك.</p>
+            </Reveal>
+
+            <Reveal as="article" className="courses__feature" aria-labelledby="feat-title">
+              <div className="courses__main">
+                <header>
+                  <h3 id="feat-title">{FEATURE.title}</h3>
+                  <p>{FEATURE.coach}</p>
+                </header>
+                <dl className="facts">
+                  {FEATURE.facts.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}
+                </dl>
+                <div className="courses__buy">
+                  <a className="btn btn--primary btn--md" href="#"
+                    onClick={(e) => { e.preventDefault(); onToast('تم حجز مقعدك التجريبي في برنامج تصميم تجربة المستخدم.'); }}>احجز مقعدك</a>
+                  <p className="courses__price">{FEATURE.price}</p>
+                </div>
+              </div>
+              <ul className="courses__perks">
+                {FEATURE.perks.map((t) => <li key={t}><Icon id="i-tick" />{t}</li>)}
+              </ul>
+            </Reveal>
+
+            <div className="programs">
+              {PROGRAMS.map((p) => <Program key={p.name} p={p} onToast={onToast} />)}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ------------------------------------------------------------------
+       Partners + partner CTA
+       ------------------------------------------------------------------ */
+    function Partners() {
+      return (
+        <>
+          <section className="section" id="partners" aria-labelledby="partners-title">
+            <div className="container">
+              <Reveal className="partners__head">
+                <h2 className="t-h2" id="partners-title">شركاء يوظّفون ويدرّبون ويعتمدون</h2>
+                <p>نعمل مع شركات تبحث عن كفاءات جاهزة، وجهات تدريب تضمن جودة المحتوى، وشركاء دفع يسهّلون الشراء.</p>
+              </Reveal>
+              <ul className="partners__grid">
+                {PARTNERS.map((p, i) => (
+                  <Reveal as="li" className="partner" key={p.img} delay={`${(i % 3) * 0.1}s`}>
+                    <div className="partner__logo">
+                      <img src={`../images/${p.img}.png`} width={p.w} height={p.h} loading="lazy" alt={`شعار ${p.name}`} />
+                    </div>
+                    <p className="partner__name">{p.name}</p>
+                  </Reveal>
+                ))}
+              </ul>
+            </div>
+          </section>
+
+          <section className="band cta" aria-labelledby="cta-title">
+            <div className="container cta__inner">
+              <div className="cta__text">
+                <h2 className="t-h2" id="cta-title">هل تمثل جهة وتريد الشراكة معنا؟</h2>
+                <p>نرحّب بشركات التوظيف وجهات التدريب والاعتماد وشركاء التقنية.</p>
+              </div>
+              <a className="btn btn--primary btn--lg" href="#contact">تقدّم كشريك</a>
+            </div>
+          </section>
+        </>
+      );
+    }
+
+    /* ------------------------------------------------------------------
+       Pricing
+       ------------------------------------------------------------------ */
+    function Pricing({ onToast }) {
+      const [selected, setSelected] = useState(null);
+      return (
+        <section className="section" id="pricing" aria-labelledby="pricing-title">
+          <div className="container">
+            <Reveal className="pricing__head">
+              <h2 className="t-h2" id="pricing-title">كريديت بدل الاشتراك: ادفع فقط عندما تتقدّم</h2>
+              <p>الكريديت يضمن أن كل طلب يصل إلى متقدمين جادين، فيرى صاحب العمل طلبك بدل أن يضيع بين مئات الطلبات العشوائية.</p>
+            </Reveal>
+
+            <Reveal as="ol" className="how">
+              {HOW.map((h) => (
+                <li className="how__item" key={h.n}>
+                  <span className="how__num" aria-hidden="true">{h.n}</span>
+                  <h3>{h.title}</h3>
+                  <p>{h.text}</p>
+                </li>
+              ))}
+            </Reveal>
+
+            <div className="plans">
+              {PLANS.map((p, i) => (
+                <Reveal as="article" key={p.name} delay={`${i * 0.08}s`}
+                  className={cx('plan', p.featured && 'plan--featured', selected === p.name && 'is-selected')}>
+                  <div className="plan__top">
+                    <h3 className="plan__name">{p.name}</h3>
+                    {p.badge && <span className="plan__badge">{p.badge}</span>}
+                  </div>
+                  <p className="plan__price"><strong>{p.price}</strong><span>ر.س</span></p>
+                  <p className="plan__credits">{p.credits}</p>
+                  <ul className="plan__list">
+                    {p.list.map((t) => <li key={t}><Icon id="i-tick" />{t}</li>)}
+                  </ul>
+                  <button className={cx('btn btn--md btn--block', p.featured ? 'btn--primary' : 'btn--secondary')} type="button"
+                    onClick={() => { setSelected(p.name); onToast(`اخترت حزمة «${p.name}». أنشئ حسابك لإكمال الشراء.`); }}>{p.cta}</button>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ------------------------------------------------------------------
+       Contact
+       ------------------------------------------------------------------ */
+    const RULES = {
+      name: (v) => (v.trim().length >= 2 ? '' : 'اكتب اسمك من فضلك.'),
+      email: (v) => {
+        if (!v.trim()) return 'اكتب بريدك الإلكتروني.';
+        return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? '' : 'اكتب بريدًا إلكترونيًا صحيحًا مثل name@example.com.';
+      },
+      message: (v) => (v.trim().length >= 10 ? '' : 'اكتب رسالة لا تقل عن ١٠ أحرف.'),
+    };
+
+    function Field({ k, icon, error, children }) {
+      return (
+        <div className={cx('field', error && 'has-error')}>
+          <div className="field__box">
+            {icon && <Icon id={icon} />}
+            {children}
+          </div>
+          <p className="field__error" id={`${k}Err`} role="alert">{error}</p>
+        </div>
+      );
+    }
+
+    function Contact() {
+      const [values, setValues] = useState({ name: '', email: '', message: '' });
+      const [errors, setErrors] = useState({ name: '', email: '', message: '' });
+      const [sending, setSending] = useState(false);
+      const [sent, setSent] = useState(false);
+      const refs = { name: useRef(null), email: useRef(null), message: useRef(null) };
+
+      const check = (key, value) => {
+        const msg = RULES[key](value);
+        setErrors((e) => ({ ...e, [key]: msg }));
+        return !msg;
+      };
+      const onChange = (key) => (e) => {
+        const value = e.target.value;
+        setValues((v) => ({ ...v, [key]: value }));
+        setSent(false);
+        if (errors[key]) check(key, value);
+      };
+      const onBlur = (key) => () => { if (values[key]) check(key, values[key]); };
+
+      const onSubmit = (e) => {
+        e.preventDefault();
+        let first = null;
+        ['name', 'email', 'message'].forEach((k) => { if (!check(k, values[k]) && !first) first = k; });
+        if (first) { refs[first].current.focus(); return; }
+        setSending(true);
+        setTimeout(() => {
+          setValues({ name: '', email: '', message: '' });
+          setSending(false);
+          setSent(true);
+        }, 900);
+      };
+
+      return (
+        <section className="section" id="contact" aria-labelledby="contact-title">
+          <div className="container">
+            <div className="contact__grid">
+              <Reveal className="contact__info" delay=".1s">
+                <div>
+                  <h2 className="t-h2" id="contact-title">تواصل مع فريق بوصلة</h2>
+                  <p>نرد خلال ٢٤ ساعة في أيام العمل.</p>
+                </div>
+                <ul className="contact__lines">
+                  <li><Icon id="i-mail" /><a href="mailto:support@bawsala.example.sa" dir="ltr">support@bawsala.example.sa</a></li>
+                  <li><Icon id="i-clock" /><span>من الأحد إلى الخميس، ٨ ص – ٥ م</span></li>
+                </ul>
+              </Reveal>
+
+              <Reveal as="form" className="form" noValidate onSubmit={onSubmit}>
+                <Field k="name" icon="i-user" error={errors.name}>
+                  <input ref={refs.name} className="field__input" type="text" placeholder="الاسم" autoComplete="name" aria-label="الاسم"
+                    aria-describedby="nameErr" aria-invalid={errors.name ? 'true' : undefined}
+                    value={values.name} onChange={onChange('name')} onBlur={onBlur('name')} />
+                </Field>
+                <Field k="email" icon="i-mail" error={errors.email}>
+                  <input ref={refs.email} className="field__input" type="email" placeholder="البريد الإلكتروني" autoComplete="email" inputMode="email" dir="rtl"
+                    aria-label="البريد الإلكتروني" aria-describedby="emailErr" aria-invalid={errors.email ? 'true' : undefined}
+                    value={values.email} onChange={onChange('email')} onBlur={onBlur('email')} />
+                </Field>
+                <Field k="message" error={errors.message}>
+                  <textarea ref={refs.message} className="field__input" placeholder="الرسالة" aria-label="الرسالة"
+                    aria-describedby="messageErr" aria-invalid={errors.message ? 'true' : undefined}
+                    value={values.message} onChange={onChange('message')} onBlur={onBlur('message')} />
+                </Field>
+                <button className="btn btn--primary btn--md btn--block form__submit" type="submit" disabled={sending}>
+                  {sending ? 'جارٍ الإرسال…' : 'إرسال الرسالة'}
+                </button>
+                <p className={cx('form__status', sent && 'is-visible')} role="status">تم إرسال رسالتك. سنرد خلال ٢٤ ساعة في أيام العمل.</p>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ------------------------------------------------------------------
+       Footer
+       ------------------------------------------------------------------ */
+    function Footer() {
+      return (
+        <footer className="footer" id="footer">
+          <div className="container">
+            <div className="footer__top">
+              <div className="footer__brand">
+                <a className="brand brand--footer" href="#top" aria-label="بوصلة — الصفحة الرئيسية">
+                  <svg className="brand__mark" viewBox="0 0 48 48" aria-hidden="true"><use href="#logo-mark" /></svg>
+                  <span className="brand__name">بوصلة | Bawsala</span>
+                </a>
+                <p>منصة سعودية تربط المواهب بالمسارات المهنية والتدريب والفرص، وتمكّن الشركات من اكتشاف الكفاءات المناسبة.</p>
+              </div>
+              <div className="footer__cols">
+                <nav className="footer__col" aria-label="المنصة">
+                  <h3>المنصة</h3>
+                  <ul>
+                    <li><a href="#steps">كيف تعمل</a></li>
+                    <li><a href="#courses">التدريب</a></li>
+                    <li><a href="#pricing">الأسعار</a></li>
+                  </ul>
+                </nav>
+                <nav className="footer__col" aria-label="الدعم">
+                  <h3>الدعم</h3>
+                  <ul>
+                    <li><a href="#contact">تواصل معنا</a></li>
+                    <li><a href="#partners">الشركاء</a></li>
+                  </ul>
+                </nav>
+                <div className="footer__col footer__col--contact">
+                  <h3>تواصل معنا</h3>
+                  <address>
+                    <a href="mailto:support@bawsala.example.sa" dir="ltr">support@bawsala.example.sa</a>
+                    <span>الرياض، المملكة العربية السعودية</span>
+                  </address>
+                </div>
+              </div>
+            </div>
+            <p className="footer__copy">© ٢٠٢٦ بوصلة. جميع الحقوق محفوظة. الأسعار غير شاملة ضريبة القيمة المضافة ١٥٪.</p>
+          </div>
+        </footer>
+      );
+    }
+
+    /* ------------------------------------------------------------------
+       App
+       ------------------------------------------------------------------ */
+    function App() {
+      const [toast, setToast] = useState({ text: '', show: false });
+      const timer = useRef(null);
+      const showToast = useCallback((text) => {
+        setToast({ text, show: true });
+        clearTimeout(timer.current);
+        timer.current = setTimeout(() => setToast((t) => ({ ...t, show: false })), 3200);
+      }, []);
+
+      return (
+        <>
+          <Header onToast={showToast} />
+          <main>
+            <Hero />
+            <Steps />
+            <Exam />
+            <Advisor onToast={showToast} />
+            <Courses onToast={showToast} />
+            <Partners />
+            <Pricing onToast={showToast} />
+            <Contact />
+          </main>
+          <Footer />
+          <div className={cx('toast', toast.show && 'is-visible')} role="status" aria-live="polite">{toast.text}</div>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

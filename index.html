@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>بوصلة | Bawsala — اكتشف مسارك وابنِ مستقبلك المهني</title>
+  <meta name="description" content="منصة سعودية تساعدك على فهم قدراتك، اكتشاف المسار المهني الأنسب، التدرّب عليه مع خبراء، والوصول إلى فرص عمل تتوافق مع خبراتك.">
+  <meta name="theme-color" content="#004723">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Swaps an image for its SVG placeholder if the real file is missing. -->
+  <script>
+    document.addEventListener('error', function (e) {
+      var t = e.target;
+      if (t && t.tagName === 'IMG' && t.getAttribute('data-fallback') && !t.getAttribute('data-fb-done')) {
+        t.setAttribute('data-fb-done', '1');
+        t.src = t.getAttribute('data-fallback');
+      }
+    }, true);
+  </script>
+</head>
+<body id="top">
+
+  <!-- Icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-tick" viewBox="0 0 24 24"><path d="M4.5 12.8l5 5L19.5 7"/></symbol>
+      <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18a2 2 0 0 1 2 2v1.5M4 7.5V17a2 2 0 0 0 2 2h12.5a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 18.5 8H6.5A2.5 2.5 0 0 1 4 5.5"/><circle cx="16.2" cy="13.5" r="1.1"/></symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7.5l8.5 6 8.5-6"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.2 2"/></symbol>
+      <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20c.6-3.8 3.8-6 7.5-6s6.9 2.2 7.5 6"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+      <symbol id="logo-mark" viewBox="0 0 48 48">
+        <rect width="48" height="48" rx="12" fill="#007f3f"/>
+        <circle cx="24" cy="24" r="16" fill="none" stroke="#fcfffd" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="0.1 4"/>
+        <path d="M24 11l5 13H19z" fill="#fcfffd"/>
+        <path d="M24 37l-5-13h10z" fill="#b8ccbf"/>
+        <circle cx="24" cy="24" r="1.8" fill="#007f3f"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- ============ Header ============ -->
+  <header class="site-header" id="siteHeader">
+    <div class="container">
+      <nav class="nav" aria-label="التنقل الرئيسي">
+        <a class="brand" href="#top" aria-label="بوصلة — الصفحة الرئيسية">
+          <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true"><use href="#logo-mark"/></svg>
+          <span class="brand__name">بوصلة | Bawsala</span>
+        </a>
+
+        <button class="nav__toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navMenu" aria-label="فتح القائمة">
+          <svg class="icon i-menu" aria-hidden="true"><use href="#i-menu"/></svg>
+          <svg class="icon i-close" aria-hidden="true"><use href="#i-close"/></svg>
+        </button>
+
+        <div class="nav__menu" id="navMenu">
+          <ul class="nav__links">
+            <li><a class="nav__link" href="#top" data-spy="top">الرئيسية</a></li>
+            <li><a class="nav__link" href="#steps" data-spy="steps">كيف تعمل</a></li>
+            <li><a class="nav__link" href="#courses" data-spy="courses">التدريب</a></li>
+            <li><a class="nav__link" href="#contact" data-spy="contact">تواصل معنا</a></li>
+          </ul>
+          <div class="nav__login-wrap">
+            <a class="btn btn--primary btn--sm" href="#" data-toast="تسجيل الدخول غير مربوط بخادم في هذا النموذج.">تسجيل الدخول</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ Hero ============ -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero__grid">
+          <div class="hero__copy">
+            <h1 class="hero__title" id="hero-title">
+              <span class="t-display">طوّر مهاراتك</span>
+              <span class="t-h1">اكتشف مسارك وابنِ مستقبلك المهني.</span>
+            </h1>
+            <p class="hero__lead">منصة متكاملة تساعدك على فهم قدراتك، اكتشاف المسار المهني الأنسب لك، التدرّب عليه مع خبراء، والوصول إلى فرص عمل تتوافق مع خبراتك وطموحاتك.</p>
+            <div class="hero__actions">
+              <a class="btn btn--primary btn--lg" href="#exam">ابدأ رحلتك الآن</a>
+              <a class="btn btn--secondary btn--lg" href="#advisor">تحدث مع مساعدك</a>
+            </div>
+            <p class="hero__note">
+              <svg class="icon" aria-hidden="true"><use href="#i-wallet"/></svg>
+              <span>تحصل على ٢٠ كريديت هدية عند التسجيل، ولا نطلب بطاقة دفع للبدء.</span>
+            </p>
+          </div>
+          <div class="hero__art">
+            <img src="images/hero%20section.png" width="2354" height="1944" alt="متدرب يعمل على حاسوب أمامه" fetchpriority="high">
+          </div>
+        </div>
+
+        <div class="trust" aria-label="شركاء النجاح">
+          <ul class="trust__list">
+            <li class="trust__item">شركة أثر الرقمية</li>
+            <li class="trust__item">شركة حلول المستقبل</li>
+            <li class="trust__item">شركة نسق للبرمجيات</li>
+            <li class="trust__item">شركة بيان للتسويق</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Steps ============ -->
+    <section class="section" id="steps" aria-labelledby="steps-title">
+      <div class="container">
+        <div class="section__head section__head--center reveal">
+          <h2 class="t-h1" id="steps-title">ست محطات من الحيرة إلى الوظيفة</h2>
+          <p>لا تبدأ بالتقديم العشوائي. اتبع مسارًا واضحًا، وكل محطة تجهّز التي بعدها.</p>
+        </div>
+
+        <ol class="steps">
+          <li class="step">
+            <div class="step__body reveal">
+              <div class="step__num" aria-hidden="true">١</div>
+              <div class="step__text">
+                <h3 class="step__title">اكتشف</h3>
+                <p class="step__desc">تحدّث مع مرشد بوصلة الذكي أو أنشئ ملفك المهني لتتعرف على ميولك ومهاراتك الحالية.</p>
+              </div>
+              <p class="step__gain"><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg><span>معرفة واضحة بنقطة البداية دون تخمين.</span></p>
+              <a class="btn btn--ghost btn--lg" href="#advisor">جرّب المرشد الآن</a>
+            </div>
+            <figure class="step__media step__media--land">
+              <img src="images/1.png" width="2576" height="1750" loading="lazy" alt="رجل سعودي يعمل على حاسوب تظهر على شاشته أكواد برمجية">
+            </figure>
+          </li>
+
+          <li class="step step--flip">
+            <div class="step__body reveal">
+              <div class="step__num" aria-hidden="true">٢</div>
+              <div class="step__text">
+                <h3 class="step__title">قيّم</h3>
+                <p class="step__desc">أجرِ التقييم المهني الشامل (١٠ دقائق) لقياس أسلوب تفكيرك وتفضيلاتك وقدراتك.</p>
+              </div>
+              <p class="step__gain"><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg><span>تقرير بنقاط القوة ومجالات التطوير.</span></p>
+              <a class="btn btn--ghost btn--lg" href="#exam">جرّب تقييمًا سريعًا</a>
+            </div>
+            <figure class="step__media step__media--tall">
+              <img src="images/2.png" width="2576" height="3816" loading="lazy" alt="شاب يعمل على حاسوب محمول أثناء التقييم المهني">
+            </figure>
+          </li>
+
+          <li class="step">
+            <div class="step__body reveal">
+              <div class="step__num" aria-hidden="true">٣</div>
+              <div class="step__text">
+                <h3 class="step__title">خطّط</h3>
+                <p class="step__desc">احصل على مسارات مقترحة بنسب توافق وخارطة طريق من المبتدئ إلى القيادي.</p>
+              </div>
+              <p class="step__gain"><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg><span>وضوح في الخطوات التالية لتحقيق هدفك.</span></p>
+              <a class="btn btn--ghost btn--lg" href="#pricing">أنشئ حسابك</a>
+            </div>
+            <figure class="step__media step__media--land">
+              <img src="images/3.png" width="2576" height="1750" loading="lazy" alt="رجل يراجع أوراق خطته المهنية على مكتبه">
+            </figure>
+          </li>
+
+          <li class="step step--flip">
+            <div class="step__body reveal">
+              <div class="step__num" aria-hidden="true">٤</div>
+              <div class="step__text">
+                <h3 class="step__title">تدرّب</h3>
+                <p class="step__desc">التحق ببرنامج تدريبي بجلسات مباشرة ومشاريع عملية وشهادة إتمام تدعم ملفك.</p>
+              </div>
+              <p class="step__gain"><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg><span>مهارات موثّقة ومعرض أعمال جاهز.</span></p>
+              <a class="btn btn--ghost btn--lg" href="#courses">استعرض البرامج</a>
+            </div>
+            <figure class="step__media step__media--tall">
+              <img src="images/4.png" width="2576" height="3816" loading="lazy" alt="متدرب يتابع تقريرًا على شاشة أثناء التدريب">
+            </figure>
+          </li>
+
+          <li class="step">
+            <div class="step__body reveal">
+              <div class="step__num" aria-hidden="true">٥</div>
+              <div class="step__text">
+                <h3 class="step__title">تقدّم</h3>
+                <p class="step__desc">تقدّم على وظائف تناسب ملفك بنسبة توافق، وادفع بالكريديت فقط عند التقديم.</p>
+              </div>
+              <p class="step__gain"><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg><span>طلبات جادّة تصل إلى أصحاب العمل المناسبين.</span></p>
+              <a class="btn btn--ghost btn--lg" href="#pricing">اطّلع على الأسعار</a>
+            </div>
+            <figure class="step__media step__media--tall">
+              <img src="images/5.png" width="2576" height="3797" loading="lazy" alt="شخص يتقدم لوظيفة من حاسوب مكتبي">
+            </figure>
+          </li>
+
+          <li class="step step--flip">
+            <div class="step__body reveal">
+              <div class="step__num" aria-hidden="true">٦</div>
+              <div class="step__text">
+                <h3 class="step__title">تطوّر</h3>
+                <p class="step__desc">تابع طلباتك وتقدمك التدريبي، وحدّث مسارك مع نمو خبراتك وطموحاتك.</p>
+              </div>
+              <p class="step__gain"><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg><span>نمو مهني مستمر وفرص ترقٍّ أفضل.</span></p>
+              <a class="btn btn--ghost btn--lg" href="#pricing">ابدأ الآن</a>
+            </div>
+            <figure class="step__media step__media--land">
+              <img src="images/6.png" width="2576" height="1750" loading="lazy" alt="مطوّر يكتب كودًا على حاسوبه ضمن مسار التطوّر المهني">
+            </figure>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ Exam ============ -->
+    <section class="section" id="exam" aria-labelledby="exam-title">
+      <div class="container">
+        <div class="exam__grid">
+          <div class="exam__copy reveal">
+            <h2 class="t-h2" id="exam-title">اكتشف ميولك في دقيقة ثم أكمل التقييم الكامل</h2>
+            <p>١٠ دقائق تقيس أسلوب تفكيرك وتفضيلاتك المهنية وتربطها بمسارات حقيقية في سوق العمل السعودي. جرّب ثلاثة أسئلة الآن.</p>
+            <ul class="ticks">
+              <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>ملفك المهني وأسلوب عملك</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>نقاط القوة ومجالات التطوير</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>تحليل لمهاراتك الأساسية</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>مسارات مقترحة بنسب توافق</li>
+            </ul>
+            <a class="btn btn--secondary btn--md" href="#pricing">أعرف تقييمك الآن</a>
+          </div>
+
+          <div class="quiz reveal" id="quiz" style="--delay:.15s">
+            <div class="quiz__bar">
+              <span id="quizCount">السؤال ١ من ٣</span>
+              <span class="quiz__meta"><span>تقييم تجريبي</span><span class="quiz__timer" id="quizTimer">٣٠ ثانية</span></span>
+            </div>
+            <div class="quiz__progress" role="progressbar" aria-label="تقدّمك في التقييم" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0" id="quizProgress">
+              <div class="quiz__fill" id="quizFill"></div>
+            </div>
+            <div class="quiz__stage" id="quizStage" aria-live="polite">
+              <h3 class="quiz__q" id="quizQ">عندما تواجه مشكلة جديدة في العمل، ماذا تفعل أولًا؟</h3>
+              <div class="quiz__options" role="radiogroup" aria-labelledby="quizQ">
+                <button class="quiz__opt" type="button" role="radio" aria-checked="false"><span class="quiz__radio"><svg class="icon"><use href="#i-tick"/></svg></span>أقسّم المهمة وأضع خطة تنفيذ</button>
+                <button class="quiz__opt" type="button" role="radio" aria-checked="false"><span class="quiz__radio"><svg class="icon"><use href="#i-tick"/></svg></span>أبني نموذجًا سريعًا بالكود</button>
+                <button class="quiz__opt" type="button" role="radio" aria-checked="false"><span class="quiz__radio"><svg class="icon"><use href="#i-tick"/></svg></span>أجمع البيانات وأبحث عن الأنماط</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Advisor CTA ============ -->
+    <section class="band advisor" id="advisor" aria-labelledby="advisor-title">
+      <div class="container advisor__inner">
+        <h2 class="t-display reveal" id="advisor-title">لا تعرف من أين تبدأ؟ اسأل مرشد بوصلة</h2>
+        <p class="advisor__lead reveal">كثيرون لا يعرفون أي مجال يناسبهم. يسألك المرشد ست أسئلة قصيرة، أو اكتب له بحرية بالعربية، ثم يقترح عليك مسارًا وبرنامج تدريب يناسب وقتك.</p>
+        <div class="advisor__foot">
+          <ul class="ticks advisor__list reveal">
+            <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>ست أسئلة تأخذ دقيقتين</li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>يفهم إجاباتك الحرة بالعربية</li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>مسار مقترح بنسبة توافق وراتب متوقع</li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>خطة واضحة: تقييم ثم تدريب ثم تقديم</li>
+          </ul>
+          <p class="advisor__note">التجربة مجانية ولا تحتاج إلى حساب.</p>
+        </div>
+        <a class="btn btn--primary btn--lg" href="#" data-toast="المرشد الذكي غير مربوط بخادم في هذا النموذج.">اسأل المرشد الآن</a>
+      </div>
+    </section>
+
+    <!-- ============ Courses ============ -->
+    <section class="section" id="courses" aria-labelledby="courses-title">
+      <div class="container">
+        <div class="section__head reveal">
+          <h2 class="t-display" id="courses-title" style="color:var(--primary-600)">برامج تدريب تنتهي بمشروع وشهادة وفرصة</h2>
+          <p>مدربون يعملون في السوق وجلسات مباشرة أسبوعية وثلاثة مشاريع تبني بها معرض أعمالك.</p>
+        </div>
+
+        <article class="courses__feature reveal" aria-labelledby="feat-title">
+          <div class="courses__main">
+            <header>
+              <h3 id="feat-title">برنامج تصميم تجربة المستخدم الاحترافي</h3>
+              <p>م. لينا العمري، مديرة تصميم المنتجات</p>
+            </header>
+            <dl class="facts">
+              <div><dt>تبدأ</dt><dd>٢٠٢٦/١١/٢٢</dd></div>
+              <div><dt>المدة</dt><dd>١٢ أسبوعًا</dd></div>
+              <div><dt>الجلسات</dt><dd>الأحد والثلاثاء، ٧:٠٠ م</dd></div>
+              <div><dt>الجهد المتوقع</dt><dd>٦–٨ ساعات أسبوعيًا</dd></div>
+            </dl>
+            <div class="courses__buy">
+              <a class="btn btn--primary btn--md" href="#" data-toast="تم حجز مقعدك التجريبي في برنامج تصميم تجربة المستخدم.">احجز مقعدك</a>
+              <p class="courses__price">٢,٤٠٠ ر.س</p>
+            </div>
+          </div>
+          <ul class="courses__perks">
+            <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>جلسات مباشرة أسبوعية مع المدرب</li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>ملاحظات فردية على أعمالك</li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>ثلاثة مشاريع عملية لمعرض أعمالك</li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>شهادة إتمام تظهر في ملفك المهني</li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>تجهيز السيرة الذاتية والمقابلات</li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>٢٠ كريديت هدية عند التسجيل</li>
+          </ul>
+        </article>
+
+        <div class="programs">
+          <article class="program reveal">
+            <h3 class="program__name">برنامج تحليل البيانات من الصفر إلى الاحتراف<small>د. ماجد الشهراني</small></h3>
+            <div class="program__cell"><span>تبدأ</span><b>٢٠٢٦/١١/٠٨</b></div>
+            <div class="program__cell"><span>المدة</span><b>١٠ أسابيع</b></div>
+            <div class="program__cell"><span>الرسوم</span><b>٢,٢٠٠ ر.س</b></div>
+            <button class="btn btn--secondary btn--md" type="button" data-interest="برنامج تحليل البيانات">سجل اهتماماتك</button>
+          </article>
+          <article class="program reveal">
+            <h3 class="program__name">برنامج تطوير الواجهات الأمامية<small>م. أحمد الزهراني</small></h3>
+            <div class="program__cell"><span>تبدأ</span><b>٢٠٢٦/١١/١٥</b></div>
+            <div class="program__cell"><span>المدة</span><b>١٤ أسبوعًا</b></div>
+            <div class="program__cell"><span>الرسوم</span><b>٢,٨٠٠ ر.س</b></div>
+            <button class="btn btn--secondary btn--md" type="button" data-interest="برنامج تطوير الواجهات الأمامية">سجل اهتماماتك</button>
+          </article>
+          <article class="program reveal">
+            <h3 class="program__name">برنامج إدارة المنتجات الرقمية<small>م. سلطان العتيبي</small></h3>
+            <div class="program__cell"><span>تبدأ</span><b>٢٠٢٦/١٢/٠٦</b></div>
+            <div class="program__cell"><span>المدة</span><b>١٠ أسابيع</b></div>
+            <div class="program__cell"><span>الرسوم</span><b>٢,٦٠٠ ر.س</b></div>
+            <button class="btn btn--secondary btn--md" type="button" data-interest="برنامج إدارة المنتجات الرقمية">سجل اهتماماتك</button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Partners ============ -->
+    <section class="section" id="partners" aria-labelledby="partners-title">
+      <div class="container">
+        <div class="partners__head reveal">
+          <h2 class="t-h2" id="partners-title">شركاء يوظّفون ويدرّبون ويعتمدون</h2>
+          <p>نعمل مع شركات تبحث عن كفاءات جاهزة، وجهات تدريب تضمن جودة المحتوى، وشركاء دفع يسهّلون الشراء.</p>
+        </div>
+        <ul class="partners__grid">
+          <li class="partner reveal">
+            <div class="partner__logo"><img src="images/Athr.png" width="400" height="132" loading="lazy" alt="شعار شركة أثر الرقمية"></div>
+            <p class="partner__name">شركة أثر الرقمية</p>
+          </li>
+          <li class="partner reveal" style="--delay:.1s">
+            <div class="partner__logo"><img src="images/Holol.png" width="400" height="112" loading="lazy" alt="شعار شركة حلول المستقبل"></div>
+            <p class="partner__name">شركة حلول المستقبل</p>
+          </li>
+          <li class="partner reveal" style="--delay:.2s">
+            <div class="partner__logo"><img src="images/Nusuk.png" width="400" height="172" loading="lazy" alt="شعار شركة نسق للبرمجيات"></div>
+            <p class="partner__name">شركة نسق للبرمجيات</p>
+          </li>
+          <li class="partner reveal">
+            <div class="partner__logo"><img src="images/Bayan.png" width="400" height="96" loading="lazy" alt="شعار شركة بيان للتسويق"></div>
+            <p class="partner__name">شركة بيان للتسويق</p>
+          </li>
+          <li class="partner reveal" style="--delay:.1s">
+            <div class="partner__logo"><img src="images/Roaya.png" width="400" height="188" loading="lazy" alt="شعار شركة رؤية المستقبل"></div>
+            <p class="partner__name">مجموعة الرؤية للتقنية</p>
+          </li>
+          <li class="partner reveal" style="--delay:.2s">
+            <div class="partner__logo"><img src="images/Rayada.png" width="400" height="208" loading="lazy" alt="شعار شركة ريادة للابتكار"></div>
+            <p class="partner__name">شركة ريادة للابتكار</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ Partner CTA ============ -->
+    <section class="band cta" aria-labelledby="cta-title">
+      <div class="container cta__inner">
+        <div class="cta__text">
+          <h2 class="t-h2" id="cta-title">هل تمثل جهة وتريد الشراكة معنا؟</h2>
+          <p>نرحّب بشركات التوظيف وجهات التدريب والاعتماد وشركاء التقنية.</p>
+        </div>
+        <a class="btn btn--primary btn--lg" href="#contact">تقدّم كشريك</a>
+      </div>
+    </section>
+
+    <!-- ============ Pricing ============ -->
+    <section class="section" id="pricing" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="pricing__head reveal">
+          <h2 class="t-h2" id="pricing-title">كريديت بدل الاشتراك: ادفع فقط عندما تتقدّم</h2>
+          <p>الكريديت يضمن أن كل طلب يصل إلى متقدمين جادين، فيرى صاحب العمل طلبك بدل أن يضيع بين مئات الطلبات العشوائية.</p>
+        </div>
+
+        <ol class="how reveal">
+          <li class="how__item">
+            <span class="how__num" aria-hidden="true">١</span>
+            <h3>اشترِ حزمة كريديت</h3>
+            <p>ابدأ بـ ٢٠ كريديت هدية ثم اختر ما يناسبك.</p>
+          </li>
+          <li class="how__item">
+            <span class="how__num" aria-hidden="true">٢</span>
+            <h3>تقدّم على الوظائف</h3>
+            <p>يُخصم من ٢ إلى ٨ كريديت بحسب مستوى الوظيفة.</p>
+          </li>
+          <li class="how__item">
+            <span class="how__num" aria-hidden="true">٣</span>
+            <h3>استرد كريديتك تلقائيًا</h3>
+            <p>استرداد تلقائي بعد ٧ أيام دون اطلاع.</p>
+          </li>
+        </ol>
+
+        <div class="plans">
+          <article class="plan reveal" data-plan="ابدأ مجانًا">
+            <div class="plan__top"><h3 class="plan__name">ابدأ مجانًا</h3></div>
+            <p class="plan__price"><strong>٠</strong><span>ر.س</span></p>
+            <p class="plan__credits">٢٠ كريديت هدية</p>
+            <ul class="plan__list">
+              <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>المرشد الذكي والتقييم المبدئي</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>ملف مهني ومسار مقترح</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>من ٣ إلى ٥ طلبات تقديم تجريبية</li>
+            </ul>
+            <button class="btn btn--secondary btn--md btn--block" type="button" data-pick>أنشئ حسابك مجانًا</button>
+          </article>
+
+          <article class="plan reveal" style="--delay:.08s" data-plan="الأساسية">
+            <div class="plan__top"><h3 class="plan__name">الأساسية</h3></div>
+            <p class="plan__price"><strong>٤٩</strong><span>ر.س</span></p>
+            <p class="plan__credits">٥٠ كريديت</p>
+            <ul class="plan__list">
+              <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>تكفي لحوالي ١٠ طلبات</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>صالحة ١٢ شهرًا</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>استرداد تلقائي عند عدم الاطلاع</li>
+            </ul>
+            <button class="btn btn--secondary btn--md btn--block" type="button" data-pick>اختر الحزمة</button>
+          </article>
+
+          <article class="plan plan--featured reveal" style="--delay:.16s" data-plan="الاحترافية">
+            <div class="plan__top"><h3 class="plan__name">الاحترافية</h3><span class="plan__badge">الأكثر مبيعًا</span></div>
+            <p class="plan__price"><strong>١٢٩</strong><span>ر.س</span></p>
+            <p class="plan__credits">١٦٠ كريديت</p>
+            <ul class="plan__list">
+              <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>تشمل ١٠ كريديت هدية</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>صالحة ١٢ شهرًا</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>استرداد تلقائي عند عدم الاطلاع</li>
+            </ul>
+            <button class="btn btn--primary btn--md btn--block" type="button" data-pick>اختر الحزمة</button>
+          </article>
+
+          <article class="plan reveal" style="--delay:.24s" data-plan="المتقدمة">
+            <div class="plan__top"><h3 class="plan__name">المتقدمة</h3></div>
+            <p class="plan__price"><strong>٢٩٩</strong><span>ر.س</span></p>
+            <p class="plan__credits">٣٠٠ كريديت</p>
+            <ul class="plan__list">
+              <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>الأوفر لكل كريديت</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>صالحة ١٢ شهرًا</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-tick"/></svg>استرداد تلقائي عند عدم الاطلاع</li>
+            </ul>
+            <button class="btn btn--secondary btn--md btn--block" type="button" data-pick>اختر الحزمة</button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Contact ============ -->
+    <section class="section" id="contact" aria-labelledby="contact-title">
+      <div class="container">
+        <div class="contact__grid">
+          <div class="contact__info reveal" style="--delay:.1s">
+            <div>
+              <h2 class="t-h2" id="contact-title">تواصل مع فريق بوصلة</h2>
+              <p>نرد خلال ٢٤ ساعة في أيام العمل.</p>
+            </div>
+            <ul class="contact__lines">
+              <li><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg><a href="mailto:support@bawsala.example.sa" dir="ltr">support@bawsala.example.sa</a></li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg><span>من الأحد إلى الخميس، ٨ ص – ٥ م</span></li>
+            </ul>
+          </div>
+
+          <form class="form reveal" id="contactForm" novalidate>
+            <div class="field">
+              <div class="field__box">
+                <svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>
+                <input class="field__input" id="cName" name="name" type="text" placeholder="الاسم" autocomplete="name" aria-label="الاسم" aria-describedby="cNameErr" required>
+              </div>
+              <p class="field__error" id="cNameErr" role="alert"></p>
+            </div>
+            <div class="field">
+              <div class="field__box">
+                <svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>
+                <input class="field__input" id="cEmail" name="email" type="email" placeholder="البريد الإلكتروني" autocomplete="email" inputmode="email" dir="rtl" aria-label="البريد الإلكتروني" aria-describedby="cEmailErr" required>
+              </div>
+              <p class="field__error" id="cEmailErr" role="alert"></p>
+            </div>
+            <div class="field">
+              <div class="field__box">
+                <textarea class="field__input" id="cMsg" name="message" placeholder="الرسالة" aria-label="الرسالة" aria-describedby="cMsgErr" required></textarea>
+              </div>
+              <p class="field__error" id="cMsgErr" role="alert"></p>
+            </div>
+            <button class="btn btn--primary btn--md btn--block form__submit" type="submit">إرسال الرسالة</button>
+            <p class="form__status" id="formStatus" role="status">تم إرسال رسالتك. سنرد خلال ٢٤ ساعة في أيام العمل.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Footer ============ -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a class="brand brand--footer" href="#top" aria-label="بوصلة — الصفحة الرئيسية">
+            <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true"><use href="#logo-mark"/></svg>
+            <span class="brand__name">بوصلة | Bawsala</span>
+          </a>
+          <p>منصة سعودية تربط المواهب بالمسارات المهنية والتدريب والفرص، وتمكّن الشركات من اكتشاف الكفاءات المناسبة.</p>
+        </div>
+        <div class="footer__cols">
+          <nav class="footer__col" aria-label="المنصة">
+            <h3>المنصة</h3>
+            <ul>
+              <li><a href="#steps">كيف تعمل</a></li>
+              <li><a href="#courses">التدريب</a></li>
+              <li><a href="#pricing">الأسعار</a></li>
+            </ul>
+          </nav>
+          <nav class="footer__col" aria-label="الدعم">
+            <h3>الدعم</h3>
+            <ul>
+              <li><a href="#contact">تواصل معنا</a></li>
+              <li><a href="#partners">الشركاء</a></li>
+            </ul>
+          </nav>
+          <div class="footer__col footer__col--contact">
+            <h3>تواصل معنا</h3>
+            <address>
+              <a href="mailto:support@bawsala.example.sa" dir="ltr">support@bawsala.example.sa</a>
+              <span>الرياض، المملكة العربية السعودية</span>
+            </address>
+          </div>
+        </div>
+      </div>
+      <p class="footer__copy">© ٢٠٢٦ بوصلة. جميع الحقوق محفوظة.
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>
